@@ -1,0 +1,7 @@
+<h1><%= @question.title %></h1>
+
+<ul>
+  <% @question.answers.each do |answer| %>
+    <li><%= answer.title %></li>
+  <% end %>
+</ul>

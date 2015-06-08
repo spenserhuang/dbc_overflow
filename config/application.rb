@@ -34,6 +34,6 @@ module DbcOverflow
   end
 end
 
-config.generators do |g|
-  g.factory_girl false
-end
+# config.generators do |g|
+#   g.factory_girl false
+# end
