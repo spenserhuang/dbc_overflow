@@ -1,27 +1,66 @@
 <h1>Questions Index</h1>
 
 <ul>
-  <% @questions.each do |question| %>
-    <li><%= question.title %>
-      <% if question.question_votes.count > 0 && question.question_votes.last.vote == true %>
-        <%= link_to 'Upvote', '/' , method: :get %>
-        <%= link_to 'Downvote', question_question_vote_path(question.id, question.question_votes.last.id), method: :delete %>
-      <% elsif question.question_votes.count > 0 && question.question_votes.last.vote == false %>
-        <%= link_to 'Upvote', question_question_vote_path(question.id, question.question_votes.last.id), method: :delete %>
-        <%= link_to 'Downvote', '/', method: :get %>
-      <% else %>
-        <%= link_to 'Upvote', question_question_votes_path(question.id, vote: true), method: :post%>
-        <%= link_to 'Downvote', question_question_votes_path(question.id, vote: false ), method: :post%>
-      <% end %>
-    </li>
+  <% if current_user %>
+    <% @questions.each do |question| %>
+      <li><%= question.title %>
+        <% if question.question_votes.find_by_user_id(current_user.id) && question.question_votes.find_by_user_id(current_user.id).vote == true %>
+          <%= link_to 'Upvote', '/', method: :get %>
+          <%= link_to 'Downvote', question_question_vote_path(question.id, question.question_votes.last.id), method: :delete %>
+          <p>Score: <%= question.question_votes.where(vote: true).count + question.question_votes.where(vote: false).count %></p>
+        <% elsif question.question_votes.find_by_user_id(current_user.id) && question.question_votes.find_by_user_id(current_user.id).vote == false %>
+          <%= link_to 'Upvote', question_question_vote_path(question.id, question.question_votes.last.id), method: :delete %>
+          <%= link_to 'Downvote', '/', method: :get %>
+          <p>Score: <%= question.question_votes.where(vote: true).count + question.question_votes.where(vote: false).count %></p>
+        <% else %>
+          <%= link_to 'Upvote', question_question_votes_path(question.id, vote: true), method: :post%>
+          <%= link_to 'Downvote', question_question_votes_path(question.id, vote: false ), method: :post%>
+          <p>Score: <%= question.question_votes.where(vote: true).count + question.question_votes.where(vote: false).count %></p>
+        <% end %>
+      </li>
+    <% end %>
+  <% else %>
+    <h3>Log In Fuccboi</h3>
   <% end %>
 </ul>
 
+<h3>Post New Question</h3>
 <%= form_for :question, url: questions_path do |f| %>
-  <p><%=f.label :title %><br>
-  <%= f.text_field :title %></p>
+  <p>
+    <%=f.label :title %><br>
+    <%= f.text_field :title %>
+  </p>
 
-  <p><%= f.label :content %><br>
-  <%= f.text_area :content %></p>
+  <p>
+    <%= f.label :content %><br>
+    <%= f.text_area :content %>
+  </p>
+
   <p><%= f.submit %></p>
+<% end %>
+
+
+<h1>Signup!</h1>
+
+<%= form_for :user, url: users_path do |f| %>
+
+  Username: <%= f.text_field :username %>
+  Password: <%= f.password_field :password %>
+  Password Confirmation: <%= f.password_field :password_confirmation %>
+  Email: <%= f.text_field :email %>
+  First Name: <%= f.text_field :first_name %>
+  Last Name: <%= f.text_field :last_name %>
+  <%= f.submit "Submit" %>
+
+<% end %>
+
+
+<h1>Login</h1>
+
+<%= form_tag '/login' do %>
+
+  Username: <%= text_field_tag :username %>
+  Password: <%= password_field_tag :password %>
+  <%= submit_tag "Submit" %>
+
 <% end %>

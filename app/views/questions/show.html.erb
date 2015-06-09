@@ -8,24 +8,29 @@
               data: { confirm: 'Are you sure?' } %>
 
 <ul>
-  <% @question.answers.each do |answer| %>
-    <li><%= answer.title %></li>
-        <% if question.question_votes.count > 0 && question.question_votes.last.vote == true %>
-        <%= link_to 'Upvote', '/' , method: :get %>
-        <%= link_to 'Downvote', question_question_vote_path(question.id, question.question_votes.last.id), method: :delete %>
-      <% elsif question.question_votes.count > 0 && question.question_votes.last.vote == false %>
-        <%= link_to 'Upvote', question_question_vote_path(question.id, question.question_votes.last.id), method: :delete %>
-        <%= link_to 'Downvote', '/', method: :get %>
+  <% if current_user %>
+    <% @question.answers.each do |answer| %>
+      <li><%= answer.title %></li>
+      <% if answer.answer_votes.find_by_user_id(current_user.id) && answer.answer_votes.find_by_user_id(current_user.id).vote == true %>
+        <%= link_to 'Upvote', @question , method: :get %>
+        <%= link_to 'Downvote', question_answer_answer_vote_path(answer_id: answer.id, question_id: params[:id]), method: :delete %>
+        <p>Score: <%= answer.answer_votes.where(vote: true).count + answer.answer_votes.where(vote: false).count %></p>
+      <% elsif answer.answer_votes.find_by_user_id(current_user.id) && answer.answer_votes.find_by_user_id(current_user.id).vote == false %>
+        <%= link_to 'Upvote', question_answer_answer_vote_path(answer_id: answer.id, question_id: params[:id]), method: :delete %>
+        <%= link_to 'Downvote', @question, method: :get %>
+        <p>Score: <%= answer.answer_votes.where(vote: true).count + answer.answer_votes.where(vote: false).count %></p>
       <% else %>
-        <%= link_to 'Upvote', question_question_votes_path(question.id, vote: true), method: :post%>
-        <%= link_to 'Downvote', question_question_votes_path(question.id, vote: false ), method: :post%>
+        <%= link_to 'Upvote', question_answer_answer_votes_path(answer_id: answer.id, question_id: params[:id], vote: true), method: :post%>
+        <%= link_to 'Downvote', question_answer_answer_votes_path(answer_id: answer.id, question_id: params[:id], vote: false ), method: :post%>
+        <p>Score: <%= answer.answer_votes.where(vote: true).count + answer.answer_votes.where(vote: false).count %></p>
       <% end %>
+    <% end %>
+  <% else %>
+    <h3>Log In Fuccboi</h3>
   <% end %>
 </ul>
 
-
-
-
+<h3>Post New Answer</h3>
 <%= form_for [@question, @answer], url: question_answers_path(@question) do |f| %>
   <%= f.fields_for @answer do |l| %>
     <p><%=l.label :title %><br>
