@@ -1,7 +1,39 @@
 <h1><%= @question.title %></h1>
 
+<%= link_to 'Edit', edit_question_path,
+              method: :get %>
+
+<%= link_to 'Destroy', @question,
+              method: :delete,
+              data: { confirm: 'Are you sure?' } %>
+
 <ul>
   <% @question.answers.each do |answer| %>
     <li><%= answer.title %></li>
+        <% if question.question_votes.count > 0 && question.question_votes.last.vote == true %>
+        <%= link_to 'Upvote', '/' , method: :get %>
+        <%= link_to 'Downvote', question_question_vote_path(question.id, question.question_votes.last.id), method: :delete %>
+      <% elsif question.question_votes.count > 0 && question.question_votes.last.vote == false %>
+        <%= link_to 'Upvote', question_question_vote_path(question.id, question.question_votes.last.id), method: :delete %>
+        <%= link_to 'Downvote', '/', method: :get %>
+      <% else %>
+        <%= link_to 'Upvote', question_question_votes_path(question.id, vote: true), method: :post%>
+        <%= link_to 'Downvote', question_question_votes_path(question.id, vote: false ), method: :post%>
+      <% end %>
   <% end %>
 </ul>
+
+
+
+
+<%= form_for [@question, @answer], url: question_answers_path(@question) do |f| %>
+  <%= f.fields_for @answer do |l| %>
+    <p><%=l.label :title %><br>
+    <%= l.text_field :title %></p>
+
+    <p><%= l.label :content %><br>
+    <%= l.text_area :content %></p>
+    <p><%= l.submit %></p>
+    <% end %>
+
+<% end %>

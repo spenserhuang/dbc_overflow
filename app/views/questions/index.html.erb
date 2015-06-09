@@ -2,6 +2,26 @@
 
 <ul>
   <% @questions.each do |question| %>
-    <li><%= question.title %></li>
+    <li><%= question.title %>
+      <% if question.question_votes.count > 0 && question.question_votes.last.vote == true %>
+        <%= link_to 'Upvote', '/' , method: :get %>
+        <%= link_to 'Downvote', question_question_vote_path(question.id, question.question_votes.last.id), method: :delete %>
+      <% elsif question.question_votes.count > 0 && question.question_votes.last.vote == false %>
+        <%= link_to 'Upvote', question_question_vote_path(question.id, question.question_votes.last.id), method: :delete %>
+        <%= link_to 'Downvote', '/', method: :get %>
+      <% else %>
+        <%= link_to 'Upvote', question_question_votes_path(question.id, vote: true), method: :post%>
+        <%= link_to 'Downvote', question_question_votes_path(question.id, vote: false ), method: :post%>
+      <% end %>
+    </li>
   <% end %>
 </ul>
+
+<%= form_for :question, url: questions_path do |f| %>
+  <p><%=f.label :title %><br>
+  <%= f.text_field :title %></p>
+
+  <p><%= f.label :content %><br>
+  <%= f.text_area :content %></p>
+  <p><%= f.submit %></p>
+<% end %>
