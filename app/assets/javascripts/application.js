@@ -14,3 +14,40 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+
+$(document).ready(function() {
+
+  console.log("js loaded");
+  clickForm();
+
+})
+
+var clickForm = function() {
+
+
+  $('#FUCK').on("submit", function(event){
+    event.preventDefault();
+
+    var result = $(this).serialize();
+
+
+    var request = $.ajax({
+      method: "POST",
+      url: '/questions',
+      data: result,
+    })
+
+    request.done(function(){
+      debugger
+
+    })
+
+  })
+
+  // $(".questionBoard").on("click", ".upvoteButton", function(event){
+  //   event.preventDefault();
+
+  //   console.log("GET OUT");
+
+  // });
+}

@@ -2,6 +2,12 @@ class QuestionsController < ApplicationController
   def index
     @questions = Question.all
     @question_vote = QuestionVote.find_by(user_id: params[:user_id], question_id: params[:question_id])
+    @quote = HTTParty.get("https://api.github.com/zen")
+
+    if @quote.response["status"] == "403 Forbidden"
+      @quote = "Get out."
+    end
+
   end
 
   def show
