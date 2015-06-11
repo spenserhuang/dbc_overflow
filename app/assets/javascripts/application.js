@@ -13,41 +13,97 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require handlebars
 //= require_tree .
 
-$(document).ready(function() {
 
-  console.log("js loaded");
-  clickForm();
+$(document).on('page:change', function() {
 
-})
+  newQuestion();
+  upvote();
+  downvote();
+  // newAnswer();
+  // upvoteAnswer();
+  // downvoteAnswer();
 
-var clickForm = function() {
+});
 
+var newQuestion = function() {
 
-  $('#FUCK').on("submit", function(event){
+  $('.questionForm').on("submit", function(event){
     event.preventDefault();
 
     var result = $(this).serialize();
-
 
     var request = $.ajax({
       method: "POST",
       url: '/questions',
       data: result,
+    });
+
+    request.done(function(response){
+      $(".list-of-questions").append(response);
+      $('.title-field').val("")
+    });
+
+    request.error(function(){
+      alert("Question Submission Error");
+    });
+  });
+};
+
+var upvote = function() {
+
+  $('.upvote-link').on("click", function(event){
+    event.preventDefault();
+
+    that = $(this)
+
+    var $link = $(this).attr("href")
+
+    var request = $.ajax({
+      method: "POST",
+      url: $link,
     })
 
-    request.done(function(){
-      debugger
+    request.done(function(response){
+      $(that).siblings('p').html("<p>Score: " + response["score"] + "</p>")
+    });
+  });
+};
 
+var downvote = function() {
+
+  $('.downvote-link').on("click", function(event){
+    event.preventDefault();
+
+    that = $(this);
+
+    var $link = $(this).attr("href")
+
+    var request = $.ajax({
+      method: "POST",
+      url: $link,
     })
 
-  })
+    request.done(function(response){
+      $(that).siblings('p').html("<p>Score: " + response["score"] + "</p>")
+    });
+  });
+};
 
-  // $(".questionBoard").on("click", ".upvoteButton", function(event){
-  //   event.preventDefault();
 
-  //   console.log("GET OUT");
+// var newAnswer = function() {
 
-  // });
-}
+//   $('.answerForm').on("submit", function(event){
+//     event.preventDefault();
+
+//     var result = $(this).serialize();
+
+//     var request = $.ajax({
+//       method: "POST",
+//       url: '/'
+//     })
+//   })
+
+// }

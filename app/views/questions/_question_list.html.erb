@@ -1,0 +1,13 @@
+<div class="question-item">
+  <div class="col span-2-t">
+    <%= link_to 'Upvote', question_question_votes_path(question.id, vote: true), class: "upvote-link" %>
+    <%= link_to 'Downvote', question_question_votes_path(question.id, vote: false ), class: "downvote-link" %>
+    <p>Score: <%= question.question_votes.where(vote: true).count - question.question_votes.where(vote: false).count %></p>
+  </div>
+  <div class="col span-8-t">
+    <h2><%= question.title %></h2>
+  </div>
+  <div class="col span-2-t">
+    <p>Ads</p>
+  </div>
+</div>

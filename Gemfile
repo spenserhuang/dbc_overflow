@@ -15,6 +15,9 @@ gem 'coffee-rails', '~> 4.1.0'
 # gem 'therubyracer', platforms: :ruby
 gem 'omniauth-github'
 gem 'dotenv'
+
+gem 'handlebars_assets', '~> 0.4.4'
+gem 'sprockets'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 gem 'httparty'

@@ -1,59 +1,60 @@
+<% if !current_user %>
+  <div class="debug">
+    <div class="debug">
+      <h1>Signup!</h1>
+
+      <%= form_for :user, url: users_path do |f| %>
+
+        Username: <%= f.text_field :username %>
+        Password: <%= f.password_field :password %>
+        Password Confirmation: <%= f.password_field :password_confirmation %>
+        Email: <%= f.text_field :email %>
+        First Name: <%= f.text_field :first_name %>
+        Last Name: <%= f.text_field :last_name %>
+        <%= f.submit "Submit" %>
+
+      <% end %>
+    </div>
+
+    <div class="debug">
+      <h1>Login</h1>
+
+      <%= form_tag '/login' do %>
+
+        Username: <%= text_field_tag :username %>
+        Password: <%= password_field_tag :password %>
+        <%= submit_tag "Submit" %>
+
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
 <h1>Questions Index</h1>
 
-<ul>
+<div class="list-of-questions">
   <% if current_user %>
-    <h3><%= @quote %></h3>
-
+    <h3 class="col span-8-t debug padding-md clear-both"><%= @quote %></h3>
     <% @questions.each do |question| %>
-      <li><%= question.title %>
-        <%= link_to 'Upvote', question_question_votes_path(question.id, vote: true), method: :post%>
-        <%= link_to 'Downvote', question_question_votes_path(question.id, vote: false ), method: :post%>
-        <p>Score: <%= question.question_votes.where(vote: true).count - question.question_votes.where(vote: false).count %></p>
-      </li>
+      <%= render partial: "question_list", locals: { question: question } %>
     <% end %>
   <% else %>
     <h3>Log In Fuccboi</h3>
   <% end %>
-</ul>
-
-<h3>Post New Question</h3>
-<div class="questionForm">
-  <%= form_for :question, url: questions_path, :html => {:id => "FUCK"} do |f| %>
-    <p>
-      <%=f.label :title %><br>
-      <%= f.text_field :title %>
-    </p>
-
-    <p>
-      <%= f.label :content %><br>
-      <%= f.text_area :content %>
-    </p>
-
-    <p><%= f.submit %></p>
-  <% end %>
 </div>
 
-<h1>Signup!</h1>
+<h3>Post New Question</h3>
+<%= form_for :question, url: questions_path, :html => {:class => "questionForm"} do |f| %>
+  <p>
+    <%=f.label :title %><br>
+    <%= f.text_field :title, :class => "title-field" %>
+  </p>
 
-  <%= form_for :user, url: users_path do |f| %>
+  <p>
+    <%= f.label :content %><br>
+    <%= f.text_area :content, :class => "content-field" %>
+  </p>
 
-    Username: <%= f.text_field :username %>
-    Password: <%= f.password_field :password %>
-    Password Confirmation: <%= f.password_field :password_confirmation %>
-    Email: <%= f.text_field :email %>
-    First Name: <%= f.text_field :first_name %>
-    Last Name: <%= f.text_field :last_name %>
-    <%= f.submit "Submit" %>
-
-  <% end %>
-
-
-<h1>Login</h1>
-
-<%= form_tag '/login' do %>
-
-  Username: <%= text_field_tag :username %>
-  Password: <%= password_field_tag :password %>
-  <%= submit_tag "Submit" %>
-
+  <p><%= f.submit %></p>
 <% end %>
+

@@ -1,0 +1,5 @@
+<li class="answer-item"><%= answer.title %></li>
+<%= link_to 'Upvote', question_answer_answer_votes_path(answer_id: answer.id, question_id: params[:id], vote: true), class: "answer-upvote-link" %>
+<%= link_to 'Downvote', question_answer_answer_votes_path(answer_id: answer.id, question_id: params[:id], vote: false ), class: "answer-downvote-link" %>
+
+<p>Score: <%= answer.answer_votes.where(vote: true).count - answer.answer_votes.where(vote: false).count %></p>

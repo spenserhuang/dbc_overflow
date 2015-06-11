@@ -7,31 +7,23 @@
               method: :delete,
               data: { confirm: 'Are you sure?' } %>
 
-<div class="questionBoard">
-  <ul>
-    <% if current_user %>
-      <% @question.answers.each do |answer| %>
-        <li><%= answer.title %></li>
-        <%= link_to 'Upvote', question_answer_answer_votes_path(answer_id: answer.id, question_id: params[:id], vote: true), method: :post%>
-        <%= link_to 'Downvote', question_answer_answer_votes_path(answer_id: answer.id, question_id: params[:id], vote: false ), method: :post%>
-
-        <p>Score: <%= answer.answer_votes.where(vote: true).count - answer.answer_votes.where(vote: false).count %></p>
-      <% end %>
-    <% else %>
-      <h3>Log In Fuccboi</h3>
+<ul class="list-of-answers">
+  <% if current_user %>
+    <% @question.answers.each do |answer| %>
+      <%= render partial: "answer_list", locals: { answer: answer } %>
     <% end %>
-  </ul>
-</div>
+  <% else %>
+    <h3>Log In Fuccboi</h3>
+  <% end %>
+</ul>
 
 <h3>Post New Answer</h3>
-<%= form_for [@question, @answer], url: question_answers_path(@question) do |f| %>
+<%= form_for [@question, @answer], url: question_answers_path(@question), :html => {:class => "answerForm"} do |f| %>
   <%= f.fields_for @answer do |l| %>
     <p><%=l.label :title %><br>
-    <%= l.text_field :title %></p>
-
+    <%= l.text_field :title, :class => "answer-title-field" %></p>
     <p><%= l.label :content %><br>
-    <%= l.text_area :content %></p>
+    <%= l.text_area :content, :class => "answer-content-field" %></p>
     <p><%= l.submit %></p>
-    <% end %>
-
+  <% end %>
 <% end %>

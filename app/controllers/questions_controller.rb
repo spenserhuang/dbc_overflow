@@ -24,7 +24,7 @@ class QuestionsController < ApplicationController
     @question = Question.new(question_params)
 
     if @question.save
-      redirect_to @question
+      render partial: "question_list", locals: { question: @question }
     else
       render 'new'
     end
